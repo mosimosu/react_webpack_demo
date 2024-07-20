@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   mode: "development", //有其它模式可以選，非必填
@@ -26,6 +27,7 @@ module.exports = {
       template: "./public/index.html",
       filename: "./index.html",
     }),
+    new webpack.HotModuleReplacementPlugin(), //啟用 HMR 外掛
   ],
   // web server 配置，設定完就可以即時看到做的任何修改
   devServer: {
@@ -35,6 +37,7 @@ module.exports = {
 
     compress: true,
     port: 9000,
+    hot: true, //啟用 HMR
   },
   resolve: {
     extensions: [".js", ".jsx"],
