@@ -21,7 +21,7 @@ function Login() {
     };
 
     axios
-      .post(api.login, body, { headers })
+      .post(api.LOGIN, body, { headers })
       .then((res) => {
         res.status === 200 &&
           localStorage.setItem("token", res.headers.authorization);
