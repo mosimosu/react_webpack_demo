@@ -20,6 +20,10 @@ module.exports = {
           options: { presets: ["@babel/preset-env", "@babel/preset-react"] },
         }, //使用 babel-loader 解析
       },
+      {
+        test: /\.css$/i, //找到符合這個型態的資料夾名稱
+        use: ["style-loader", "css-loader"], //使用 style-loader 和 css-loader
+      },
     ],
   },
   plugins: [
