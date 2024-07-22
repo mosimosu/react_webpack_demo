@@ -24,6 +24,22 @@ function App() {
       });
   }
 
+  function handleDelete(id) {
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: token,
+    };
+    axios
+      .delete(`${api.DELETE_TODOS}/${id}`, { headers })
+      .then((res) => {
+        res.status === 200 && setData(data.filter((item) => item.id !== id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
     function fetchData() {
       const headers = {
@@ -68,6 +84,9 @@ function App() {
             return (
               <li key={item.id} style={{ display: "flex" }}>
                 <p>{item.content}</p>
+                <button type="button" onClick={() => handleDelete(item.id)}>
+                  刪除
+                </button>
               </li>
             );
           })}
