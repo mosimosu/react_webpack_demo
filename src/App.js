@@ -17,6 +17,12 @@ function App() {
           if (filter === "undone") return !item.completed_at;
         });
 
+  const searchedData = filteredData
+    ? filteredData.filter((item) =>
+        item.content.toLowerCase().includes(search.toLowerCase())
+      )
+    : [];
+
   function handlePost(text) {
     const headers = {
       "Content-Type": "application/json",
@@ -169,28 +175,49 @@ function App() {
         </label>
       </div>
       <ul>
-        {filteredData &&
-          filteredData.map((item) => {
-            return (
-              <li key={item.id} style={{ display: "flex", gap: "10px" }}>
-                <p>{item.content}</p>
-                <button
-                  type="button"
-                  onClick={() => handleComplete(item.id)}
-                  style={{ padding: "2px" }}
-                >
-                  {item.completed_at ? "已完成" : "未完成"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(item.id)}
-                  style={{ padding: "2px" }}
-                >
-                  刪除
-                </button>
-              </li>
-            );
-          })}
+        {searchedData
+          ? searchedData?.map((item) => {
+              return (
+                <li key={item.id} style={{ display: "flex", gap: "10px" }}>
+                  <p>{item.content}</p>
+                  <button
+                    type="button"
+                    onClick={() => handleComplete(item.id)}
+                    style={{ padding: "2px" }}
+                  >
+                    {item.completed_at ? "已完成" : "未完成"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(item.id)}
+                    style={{ padding: "2px" }}
+                  >
+                    刪除
+                  </button>
+                </li>
+              );
+            })
+          : filteredData?.map((item) => {
+              return (
+                <li key={item.id} style={{ display: "flex", gap: "10px" }}>
+                  <p>{item.content}</p>
+                  <button
+                    type="button"
+                    onClick={() => handleComplete(item.id)}
+                    style={{ padding: "2px" }}
+                  >
+                    {item.completed_at ? "已完成" : "未完成"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(item.id)}
+                    style={{ padding: "2px" }}
+                  >
+                    刪除
+                  </button>
+                </li>
+              );
+            })}
       </ul>
     </div>
   );
