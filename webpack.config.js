@@ -25,6 +25,17 @@ module.exports = {
         test: /\.css$/i, //找到符合這個型態的資料夾名稱
         use: ["style-loader", "css-loader"], //使用 style-loader 和 css-loader
       },
+      {
+        test: /\.less$/i,
+        use: [
+          // 將 CSS 插入到 DOM 中
+          "style-loader",
+          // 將 CSS 轉換成 CommonJS Module
+          "css-loader",
+          // 將 Less 編譯成 CSS
+          "less-loader",
+        ],
+      },
     ],
   },
   plugins: [
