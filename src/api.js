@@ -6,6 +6,7 @@ const api = {
   LOGIN: `${mainUrl}/users/sign_in`,
   SIGN_UP: `${mainUrl}/users`,
   DELETE_TODOS: `${mainUrl}/todos`,
+  PATCH_COMPLETE: `${mainUrl}/todos`,
 };
 
 export default api;
