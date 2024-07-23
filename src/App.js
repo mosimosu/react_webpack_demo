@@ -9,18 +9,34 @@ function App() {
   const [search, setSearch] = useState("");
   const token = localStorage.getItem("token");
 
-  const filteredData =
-    filter === "all"
-      ? data
-      : data.filter((item) => {
-          if (filter === "done") return item.completed_at;
-          if (filter === "undone") return !item.completed_at;
-        });
+  //* radio button 當選項時，要做的事情
+  // const filteredData =
+  //   filter === "all"
+  //     ? data
+  //     : data.filter((item) => {
+  //         if (filter === "done") return item.completed_at;
+  //         if (filter === "undone") return !item.completed_at;
+  //       });
 
-  const searchedData = filteredData
-    ? filteredData.filter((item) =>
-        item.content.toLowerCase().includes(search.toLowerCase())
-      )
+  //* 手動搜尋
+  // const searchedData = filteredData
+  //   ? filteredData.filter((item) =>
+  //       item.content.toLowerCase().includes(search.toLowerCase())
+  //     )
+  //   : [];
+
+  //* 把上面兩行合併成一行
+  const filteredData = data
+    ? data.filter((item) => {
+        const matchesFilter =
+          filter === "all" ||
+          (filter === "done" && item.completed_at) ||
+          (filter === "undone" && !item.completed_at);
+        const matchesSearch = item.content
+          .toLowerCase()
+          .includes(search.toLowerCase());
+        return matchesFilter && matchesSearch;
+      })
     : [];
 
   function handlePost(text) {
@@ -175,7 +191,8 @@ function App() {
         </label>
       </div>
       <ul>
-        {searchedData
+        {
+          /* {searchedData
           ? searchedData?.map((item) => {
               return (
                 <li key={item.id} style={{ display: "flex", gap: "10px" }}>
@@ -217,7 +234,29 @@ function App() {
                   </button>
                 </li>
               );
-            })}
+            })} */
+          filteredData?.map((item) => {
+            return (
+              <li key={item.id} style={{ display: "flex", gap: "10px" }}>
+                <p>{item.content}</p>
+                <button
+                  type="button"
+                  onClick={() => handleComplete(item.id)}
+                  style={{ padding: "2px" }}
+                >
+                  {item.completed_at ? "已完成" : "未完成"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(item.id)}
+                  style={{ padding: "2px" }}
+                >
+                  刪除
+                </button>
+              </li>
+            );
+          })
+        }
       </ul>
     </div>
   );
