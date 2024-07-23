@@ -23,8 +23,10 @@ function Login() {
     axios
       .post(api.LOGIN, body, { headers })
       .then((res) => {
+        console.log(res);
         res.status === 200 &&
           localStorage.setItem("token", res.headers.authorization);
+        res.status === 200 && localStorage.setItem("name", res.data.nickname);
         res.status === 200 && navigate("/home");
       })
       .catch((err) => {
