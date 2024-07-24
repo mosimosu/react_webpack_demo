@@ -31,10 +31,10 @@ function Signup() {
       axios
         .post(api.SIGN_UP, body, { headers })
         .then((res) => {
-          res.status === 200 && alert("註冊成功");
-          res.status === 200 &&
+          res.status === 201 && alert("註冊成功");
+          res.status === 201 &&
             localStorage.setItem("token", res.headers.authorization);
-          res.status === 200 && navigate("/home");
+          res.status === 201 && navigate("/home");
         })
         .catch((err) => {
           console.log(err);
