@@ -58,6 +58,9 @@ function Login() {
         <button type="button" onClick={handleLogin}>
           登入
         </button>
+        <button type="button" onClick={() => navigate("/signup")}>
+          註冊
+        </button>
       </div>
     </>
   );
