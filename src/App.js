@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { ConfigProvider, Button, Input } from "antd";
+const { Search } = Input;
 import axios from "axios";
 import api from "./api.js";
+import {
+  Wrapper,
+  Container,
+  StyledButton,
+  Title,
+  InputSection,
+  RadioSection,
+  Lists,
+} from "./styles.js";
 
 function App() {
   const [data, setData] = useState(null);
@@ -88,22 +99,6 @@ function App() {
       });
   }
 
-  function handleSearch() {
-    const headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: token,
-    };
-    axios
-      .get(`${api.GET_TODOS}?q=${search}`, { headers })
-      .then((res) => {
-        setData(res.data.todos);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   useEffect(() => {
     function fetchData() {
       const headers = {
@@ -126,73 +121,115 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1 style={{ color: "red", textAlign: "center" }}>
-        {`${localStorage.getItem("name")}'s Todo List` || "Todo List"}
-      </h1>
-      <div>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handlePost(text);
-            }
-          }}
-        />
-        <button type="button" onClick={() => handlePost(text)}>
-          送出
-        </button>
-      </div>
-      <div>
-        <input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button type="button" onClick={handleSearch}>
-          搜尋
-        </button>
-      </div>
-      <div>
-        <label htmlFor="all">
-          <input
-            type="radio"
-            name="itemStatus"
-            id="all"
-            value={"all"}
-            checked={filter === "all"}
-            onChange={() => setFilter("all")}
-          />
-          all
-        </label>
-        <label htmlFor="done">
-          <input
-            type="radio"
-            name="itemStatus"
-            id="done"
-            value={"done"}
-            checked={filter === "done"}
-            onChange={() => setFilter("done")}
-          />
-          done
-        </label>
-        <label htmlFor="undone">
-          <input
-            type="radio"
-            name="itemStatus"
-            id="undone"
-            value={"undone"}
-            checked={filter === "undone"}
-            onChange={() => setFilter("undone")}
-          />
-          undone
-        </label>
-      </div>
-      <ul>
-        {
-          /* {searchedData
+    <>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#000",
+          },
+          components: {
+            Button: {
+              colorPrimary: "#1da7ff",
+            },
+          },
+        }}
+      >
+        <Wrapper>
+          <Container>
+            <Title>
+              <h1>
+                {(localStorage.getItem("name") !== "null" &&
+                  `${localStorage.getItem("name")}'s Todo List`) ||
+                  "Todo List"}
+              </h1>
+            </Title>
+
+            <InputSection>
+              <Input
+                size="large"
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handlePost(text);
+                  }
+                }}
+              />
+              <Button type="button" onClick={() => handlePost(text)}>
+                送出
+              </Button>
+            </InputSection>
+            <InputSection>
+              <Search
+                size="large"
+                loading={search && filteredData.length === 0}
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </InputSection>
+            <RadioSection>
+              <label htmlFor="all">
+                <input
+                  type="radio"
+                  name="itemStatus"
+                  id="all"
+                  value={"all"}
+                  checked={filter === "all"}
+                  onChange={() => setFilter("all")}
+                />
+                all
+              </label>
+              <label htmlFor="done">
+                <input
+                  type="radio"
+                  name="itemStatus"
+                  id="done"
+                  value={"done"}
+                  checked={filter === "done"}
+                  onChange={() => setFilter("done")}
+                />
+                done
+              </label>
+              <label htmlFor="undone">
+                <input
+                  type="radio"
+                  name="itemStatus"
+                  id="undone"
+                  value={"undone"}
+                  checked={filter === "undone"}
+                  onChange={() => setFilter("undone")}
+                />
+                undone
+              </label>
+            </RadioSection>
+            <Lists>
+              <ul>
+                {filteredData?.map((item) => {
+                  return (
+                    <li key={item.id} className="item">
+                      <p className="text">{item.content}</p>
+                      <div>
+                        <Button
+                          type="primary"
+                          onClick={() => handleComplete(item.id)}
+                          style={{ padding: "2px" }}
+                        >
+                          {item.completed_at ? "已完成" : "未完成"}
+                        </Button>
+                        <Button
+                          type="primary"
+                          onClick={() => handleDelete(item.id)}
+                          style={{ padding: "2px" }}
+                        >
+                          刪除
+                        </Button>
+                      </div>
+                    </li>
+                  );
+                })}
+                {/* {searchedData
           ? searchedData?.map((item) => {
               return (
                 <li key={item.id} style={{ display: "flex", gap: "10px" }}>
@@ -234,31 +271,13 @@ function App() {
                   </button>
                 </li>
               );
-            })} */
-          filteredData?.map((item) => {
-            return (
-              <li key={item.id} style={{ display: "flex", gap: "10px" }}>
-                <p>{item.content}</p>
-                <button
-                  type="button"
-                  onClick={() => handleComplete(item.id)}
-                  style={{ padding: "2px" }}
-                >
-                  {item.completed_at ? "已完成" : "未完成"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(item.id)}
-                  style={{ padding: "2px" }}
-                >
-                  刪除
-                </button>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </div>
+            })} */}
+              </ul>
+            </Lists>
+          </Container>
+        </Wrapper>
+      </ConfigProvider>
+    </>
   );
 }
 
