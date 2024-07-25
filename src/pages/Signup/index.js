@@ -17,7 +17,7 @@ function Signup() {
     };
     const body = {
       user: {
-        name: name,
+        nickname: name,
         email: email,
         password: password,
         password_confirmation: confirmPassword,
@@ -34,6 +34,7 @@ function Signup() {
           res.status === 201 && alert("註冊成功");
           res.status === 201 &&
             localStorage.setItem("token", res.headers.authorization);
+          res.status === 201 && localStorage.setItem("name", res.data.nickname);
           res.status === 201 && navigate("/home");
         })
         .catch((err) => {
@@ -47,7 +48,7 @@ function Signup() {
       <div>
         <h1>Signup</h1>
         <label htmlFor="name">
-          <p>Name</p>
+          <p>Nickname</p>
           <input
             type="text"
             id="name"
