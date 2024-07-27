@@ -1,12 +1,11 @@
 import React, { useState, useEffect, createContext, useMemo } from "react";
-import { ConfigProvider, Button, Input, notification } from "antd";
+import { ConfigProvider, Button, Input, notification, Modal } from "antd";
 const { Search } = Input;
 import axios from "axios";
 import api from "./api.js";
 import {
   Wrapper,
   Container,
-  StyledButton,
   Title,
   InputSection,
   RadioSection,
@@ -41,6 +40,35 @@ function App() {
     }),
     []
   );
+
+  // const showDeleteConfirm = (id) => {
+  //   Modal.confirm({
+  //     title: "Are you sure you want to delete this item?",
+  //     content: "This action cannot be undone.",
+  //     okText: "Yes",
+  //     okType: "danger",
+  //     cancelText: "No",
+  //     onOk() {
+  //       handleDelete(id);
+  //     },
+  //   });
+  // };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const showDeleteConfirm = (id) => {
+    !isModalVisible && setDeleteId(id);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    handleDelete(deleteId);
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   //* radio button 當選項時，要做的事情
   // const filteredData =
@@ -152,6 +180,14 @@ function App() {
     <>
       <Context.Provider value={contextValue}>
         {contextHolder}
+        <Modal
+          title="Are you sure you want to delete this item?"
+          open={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <p>This action cannot be undone.</p>
+        </Modal>
         <ConfigProvider
           theme={{
             token: {
@@ -250,7 +286,7 @@ function App() {
                           </Button>
                           <Button
                             type="primary"
-                            onClick={() => handleDelete(item.id)}
+                            onClick={() => showDeleteConfirm(item.id)}
                             style={{ padding: "2px" }}
                           >
                             刪除
