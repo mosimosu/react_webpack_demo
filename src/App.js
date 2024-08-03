@@ -11,6 +11,7 @@ import {
   RadioSection,
   Lists,
 } from "./styles.js";
+import useTodos from "./hooks/useData.js";
 
 const Context = createContext({
   name: "Default",
@@ -23,6 +24,8 @@ function App() {
   const [search, setSearch] = useState("");
   const token = localStorage.getItem("token");
   const [notificationApi, contextHolder] = notification.useNotification();
+
+  const { datas, error, isLoading } = useTodos(token);
 
   const openNotification = (placement, message) => {
     notificationApi.info({
@@ -41,19 +44,6 @@ function App() {
     []
   );
 
-  // const showDeleteConfirm = (id) => {
-  //   Modal.confirm({
-  //     title: "Are you sure you want to delete this item?",
-  //     content: "This action cannot be undone.",
-  //     okText: "Yes",
-  //     okType: "danger",
-  //     cancelText: "No",
-  //     onOk() {
-  //       handleDelete(id);
-  //     },
-  //   });
-  // };
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const showDeleteConfirm = (id) => {
@@ -70,23 +60,6 @@ function App() {
     setIsModalVisible(false);
   };
 
-  //* radio button 當選項時，要做的事情
-  // const filteredData =
-  //   filter === "all"
-  //     ? data
-  //     : data.filter((item) => {
-  //         if (filter === "done") return item.completed_at;
-  //         if (filter === "undone") return !item.completed_at;
-  //       });
-
-  //* 手動搜尋
-  // const searchedData = filteredData
-  //   ? filteredData.filter((item) =>
-  //       item.content.toLowerCase().includes(search.toLowerCase())
-  //     )
-  //   : [];
-
-  //* 把上面兩行合併成一行
   const filteredData = data
     ? data.filter((item) => {
         const matchesFilter =
@@ -295,49 +268,6 @@ function App() {
                       </li>
                     );
                   })}
-                  {/* {searchedData
-          ? searchedData?.map((item) => {
-              return (
-                <li key={item.id} style={{ display: "flex", gap: "10px" }}>
-                  <p>{item.content}</p>
-                  <button
-                    type="button"
-                    onClick={() => handleComplete(item.id)}
-                    style={{ padding: "2px" }}
-                  >
-                    {item.completed_at ? "已完成" : "未完成"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(item.id)}
-                    style={{ padding: "2px" }}
-                  >
-                    刪除
-                  </button>
-                </li>
-              );
-            })
-          : filteredData?.map((item) => {
-              return (
-                <li key={item.id} style={{ display: "flex", gap: "10px" }}>
-                  <p>{item.content}</p>
-                  <button
-                    type="button"
-                    onClick={() => handleComplete(item.id)}
-                    style={{ padding: "2px" }}
-                  >
-                    {item.completed_at ? "已完成" : "未完成"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(item.id)}
-                    style={{ padding: "2px" }}
-                  >
-                    刪除
-                  </button>
-                </li>
-              );
-            })} */}
                 </ul>
               </Lists>
             </Container>
